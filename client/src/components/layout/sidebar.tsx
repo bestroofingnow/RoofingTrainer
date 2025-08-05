@@ -16,12 +16,12 @@ import {
 export default function Sidebar() {
   const [location] = useLocation();
   
-  const { data: progress = [] } = useQuery({
+  const { data: progress = [] } = useQuery<any[]>({
     queryKey: ["/api/user/progress"],
   });
 
   // Calculate overall progress
-  const completedModules = progress.filter(p => p.status === 'completed').length;
+  const completedModules = progress.filter((p: any) => p.status === 'completed').length;
   const totalModules = 25; // Approximate total modules across all days
   const overallProgress = Math.round((completedModules / totalModules) * 100);
   const currentDay = Math.min(Math.floor(completedModules / 5) + 1, 5);
@@ -106,8 +106,8 @@ export default function Sidebar() {
             {/* Main Navigation */}
             {navigationItems.map((item) => (
               <Link key={item.name} href={item.href}>
-                <a className={cn(
-                  "group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors",
+                <div className={cn(
+                  "group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer",
                   item.current
                     ? "bg-primary/10 text-primary"
                     : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
@@ -117,7 +117,7 @@ export default function Sidebar() {
                     item.current ? "text-primary" : "text-gray-400"
                   )} />
                   {item.name}
-                </a>
+                </div>
               </Link>
             ))}
 
@@ -129,8 +129,8 @@ export default function Sidebar() {
               
               {trainingDays.map((day) => (
                 <Link key={day.day} href={`/training/${day.day}`}>
-                  <a className={cn(
-                    "group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors",
+                  <div className={cn(
+                    "group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer",
                     day.status === 'locked' && "cursor-not-allowed",
                     location === `/training/${day.day}`
                       ? "bg-blue-50 text-blue-700"
@@ -161,7 +161,7 @@ export default function Sidebar() {
                         {day.title}
                       </div>
                     </div>
-                  </a>
+                  </div>
                 </Link>
               ))}
             </div>

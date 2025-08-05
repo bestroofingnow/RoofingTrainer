@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/layout/header";
 import Sidebar from "@/components/layout/sidebar";
-import VideoPlayer from "@/components/training/video-player";
+import InteractiveLesson from "@/components/training/interactive-lesson";
 import Quiz from "@/components/training/quiz";
 import StormMapLab from "@/components/training/storm-map-lab";
 import PracticeCallModal from "@/components/training/practice-call-modal";
@@ -16,15 +16,16 @@ import { useState } from "react";
 import { CheckCircle, Play, Lock, ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { interactiveContent } from "@/data/training-content";
 
 const trainingDayContent = {
   1: {
     title: "Welcome & Roofing Basics",
     description: "Master the fundamentals of roofing and Best Roofing Now's mission",
     modules: [
-      { id: "welcome", title: "CEO Welcome & Mission", type: "video", videoUrl: "https://example.com/welcome", duration: 15 },
+      { id: "welcome", title: "CEO Welcome & Mission", type: "interactive", duration: 15 },
       { id: "basics", title: "Roofing Basics Lightning Round", type: "interactive", duration: 20 },
-      { id: "attic", title: "Virtual Attic Walkthrough", type: "video", videoUrl: "https://example.com/attic", duration: 25 },
+      { id: "attic", title: "Virtual Attic Walkthrough", type: "interactive", duration: 25 },
       { id: "quiz1", title: "Knowledge Check", type: "quiz", duration: 10 }
     ]
   },
@@ -32,8 +33,8 @@ const trainingDayContent = {
     title: "Insurance 101 & NC Claim Regulations",
     description: "Master the fundamentals of insurance claims and regulatory compliance",
     modules: [
-      { id: "insurance", title: "Insurance Fundamentals", type: "video", videoUrl: "https://example.com/insurance", duration: 20 },
-      { id: "regulations", title: "NC Claim Regulations", type: "video", videoUrl: "https://example.com/regulations", duration: 15 },
+      { id: "insurance", title: "Insurance Fundamentals", type: "interactive", duration: 20 },
+      { id: "regulations", title: "NC Claim Regulations", type: "interactive", duration: 15 },
       { id: "storm-map", title: "Storm Map Lab", type: "interactive", duration: 30 },
       { id: "vocabulary", title: "Roof Damage Vocabulary", type: "interactive", duration: 15 },
       { id: "quiz2", title: "ACV vs RCV Role Play", type: "quiz", duration: 10 }
@@ -43,8 +44,8 @@ const trainingDayContent = {
     title: "Scripts & Psychology",
     description: "Master cold calling psychology and script development",
     modules: [
-      { id: "compliance", title: "TCPA & DNC Compliance", type: "video", videoUrl: "https://example.com/compliance", duration: 20 },
-      { id: "psychology", title: "Psychology of Cold Calling", type: "video", videoUrl: "https://example.com/psychology", duration: 25 },
+      { id: "compliance", title: "TCPA & DNC Compliance", type: "interactive", duration: 20 },
+      { id: "psychology", title: "Psychology of Cold Calling", type: "interactive", duration: 25 },
       { id: "hackathon", title: "Script Writing Hack-a-thon", type: "interactive", duration: 45 },
       { id: "quiz3", title: "Script Assessment", type: "quiz", duration: 15 }
     ]
@@ -54,7 +55,7 @@ const trainingDayContent = {
     description: "Master objection handling and CRM management",
     modules: [
       { id: "objections", title: "Objection Handling Dojo", type: "interactive", duration: 40 },
-      { id: "crm", title: "CRM Training", type: "video", videoUrl: "https://example.com/crm", duration: 20 },
+      { id: "crm", title: "CRM Training", type: "interactive", duration: 20 },
       { id: "live-calls", title: "Live Call Analysis", type: "interactive", duration: 30 },
       { id: "simulation", title: "Live Call Simulation", type: "practice", duration: 20 }
     ]
@@ -63,8 +64,8 @@ const trainingDayContent = {
     title: "Ethics & Certification",
     description: "Ethics training and final certification exam",
     modules: [
-      { id: "ethics", title: "Ethics & Fraud Prevention", type: "video", videoUrl: "https://example.com/ethics", duration: 25 },
-      { id: "kpis", title: "KPI Math & Compensation", type: "video", videoUrl: "https://example.com/kpis", duration: 15 },
+      { id: "ethics", title: "Ethics & Fraud Prevention", type: "interactive", duration: 25 },
+      { id: "kpis", title: "KPI Math & Compensation", type: "interactive", duration: 15 },
       { id: "final-exam", title: "Certification Exam", type: "quiz", duration: 45 },
       { id: "graduation", title: "Graduation", type: "interactive", duration: 10 }
     ]
@@ -151,22 +152,8 @@ export default function TrainingDay() {
     if (!currentModule) return null;
 
     switch (currentModule.type) {
-      case "video":
-        return (
-          <VideoPlayer
-            title={currentModule.title}
-            videoUrl={currentModule.videoUrl || ""}
-            duration={currentModule.duration}
-            onComplete={() => {
-              updateProgressMutation.mutate({
-                moduleId: day * 10 + currentModuleIndex,
-                status: "completed",
-              });
-            }}
-          />
-        );
       case "quiz":
-        const quiz = quizzes.find(q => q.title.includes(currentModule.title));
+        const quiz = (quizzes as any[]).find((q: any) => q.title.includes(currentModule.title));
         return quiz ? (
           <Quiz
             quiz={quiz}
@@ -191,6 +178,27 @@ export default function TrainingDay() {
         if (currentModule.id === "storm-map") {
           return <StormMapLab />;
         }
+        
+        // Use interactive lesson component with content from training-content.ts
+        const moduleContent = interactiveContent[currentModule.id as keyof typeof interactiveContent];
+        
+        if (moduleContent) {
+          return (
+            <InteractiveLesson
+              title={currentModule.title}
+              moduleId={currentModule.id}
+              content={moduleContent}
+              onComplete={() => {
+                updateProgressMutation.mutate({
+                  moduleId: day * 10 + currentModuleIndex,
+                  status: "completed",
+                });
+                handleNextModule();
+              }}
+            />
+          );
+        }
+        
         return (
           <div className="bg-white rounded-xl shadow-sm border p-6">
             <h3 className="text-lg font-semibold mb-4">{currentModule.title}</h3>
