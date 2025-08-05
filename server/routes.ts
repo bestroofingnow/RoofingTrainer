@@ -8,11 +8,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  // Temporary auth bypass for development
+  app.get('/api/auth/user', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      // Create or get test user for development
+      let user = await storage.getUser("test-user-123");
+      if (!user) {
+        user = await storage.upsertUser({
+          id: "test-user-123",
+          email: "test@bestroofing.com",
+          firstName: "Test",
+          lastName: "User",
+          profileImageUrl: null,
+        });
+      }
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
