@@ -493,6 +493,91 @@ export const interactiveContent: Record<string, any> = {
     ]
   },
 
+  "live-calls": {
+    sections: [
+      {
+        id: "analysis-intro",
+        title: "Live Call Analysis Introduction",
+        type: "content" as const,
+        content: "In this module, we'll analyze real appointment setter calls to identify best practices and areas for improvement. Pay attention to tone, pacing, objection handling, and compliance."
+      },
+      {
+        id: "good-call-analysis",
+        title: "Successful Call Analysis",
+        type: "activity" as const,
+        content: "Analyze what makes a successful appointment setting call",
+        activity: {
+          type: "scenario",
+          data: {
+            title: "Successful Call Breakdown",
+            scenario: "Listen to how this appointment setter builds rapport, handles objections, and schedules the appointment.",
+            decision_points: [
+              {
+                id: 1,
+                situation: "The homeowner says 'We just had our roof looked at last year.'",
+                question: "What made the setter's response effective?",
+                options: [
+                  "They acknowledged the homeowner's statement and pivoted to recent storm activity",
+                  "They immediately argued that the previous inspection was outdated",
+                  "They hung up without responding",
+                  "They offered a discount"
+                ],
+                correct: 0,
+                feedback: {
+                  correct: "Exactly! Acknowledging and pivoting to new information (recent storms) creates urgency without dismissing their previous action.",
+                  incorrect: "The key is to acknowledge their statement while introducing new relevant information about recent storm activity."
+                }
+              }
+            ],
+            best_outcome: "The appointment setter successfully scheduled an inspection by acknowledging past actions while highlighting new storm risks."
+          }
+        }
+      },
+      {
+        id: "common-mistakes",
+        title: "Common Mistakes to Avoid",
+        type: "activity" as const,
+        content: "Learn from common mistakes in appointment setting calls",
+        activity: {
+          type: "flashcards",
+          data: {
+            cards: [
+              { question: "What's wrong with saying 'Your roof is definitely damaged'?", answer: "You cannot guarantee damage without an inspection - this is misleading and unethical" },
+              { question: "Why avoid talking over the homeowner?", answer: "Active listening builds trust and helps you understand their real concerns" },
+              { question: "What's the problem with rushing to schedule?", answer: "Building rapport and addressing concerns first leads to higher show rates" }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  
+  "simulation": {
+    sections: [
+      {
+        id: "simulation-intro",
+        title: "Live Call Simulation Setup",
+        type: "content" as const,
+        content: "In this practice simulation, you'll role-play a complete appointment setting call. Remember to use the 6R framework, handle objections professionally, and focus on helping the homeowner."
+      },
+      {
+        id: "simulation-practice",
+        title: "Practice Simulation",
+        type: "activity" as const,
+        content: "Complete a practice call simulation",
+        activity: {
+          type: "roleplay",
+          data: {
+            scenario: "Mrs. Johnson in a storm-affected neighborhood",
+            background: "Recent hail storm hit the area 2 weeks ago. Many neighbors have already had inspections.",
+            objections: ["I'm not interested", "I need to talk to my husband", "We have a roofer already"],
+            goal: "Schedule a free inspection while maintaining professionalism and compliance"
+          }
+        }
+      }
+    ]
+  },
+  
   "graduation": {
     sections: [
       {

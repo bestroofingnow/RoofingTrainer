@@ -40,7 +40,30 @@ export default function InteractiveLesson({
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
   const [isCompleted, setIsCompleted] = useState(false);
 
+  // Ensure content and sections exist
+  if (!content || !content.sections || content.sections.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <p>No content available for this module.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const section = content.sections[currentSection];
+  
+  // Ensure section exists
+  if (!section) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <p>Error loading section content.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+  
   const progress = ((completedSections.size + 1) / content.sections.length) * 100;
 
   const handleSectionComplete = () => {
