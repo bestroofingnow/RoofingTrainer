@@ -17,6 +17,7 @@ import { CheckCircle, Play, Lock, ArrowLeft, ArrowRight, Save } from "lucide-rea
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { interactiveContent } from "@/data/training-content";
+import { quizzes } from "@/data/quizzes";
 
 const trainingDayContent = {
   1: {
@@ -87,10 +88,8 @@ export default function TrainingDay() {
     queryKey: ["/api/user/progress"],
   });
 
-  const { data: quizzes = [] } = useQuery({
-    queryKey: ["/api/training/modules", day, "quizzes"],
-    enabled: !!day,
-  });
+  // Get quizzes from local data instead of API
+  const dayQuizzes = quizzes.filter(q => q.moduleId === day);
 
   const updateProgressMutation = useMutation({
     mutationFn: async (data: { moduleId: number; status: string; score?: number }) => {
@@ -153,7 +152,7 @@ export default function TrainingDay() {
 
     switch (currentModule.type) {
       case "quiz":
-        const quiz = (quizzes as any[]).find((q: any) => q.title.includes(currentModule.title));
+        const quiz = dayQuizzes[0]; // Get the quiz for the current day
         return quiz ? (
           <Quiz
             quiz={quiz}

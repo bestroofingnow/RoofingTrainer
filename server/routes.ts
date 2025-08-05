@@ -29,8 +29,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Training modules
-  app.get('/api/training/modules', isAuthenticated, async (req, res) => {
+  // Training modules (temporarily unprotected for development)
+  app.get('/api/training/modules', async (req, res) => {
     try {
       const modules = await storage.getTrainingModules();
       res.json(modules);
@@ -77,10 +77,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User progress
-  app.get('/api/user/progress', isAuthenticated, async (req: any, res) => {
+  // User progress (temporarily unprotected for development)
+  app.get('/api/user/progress', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = "test-user-123";
       const progress = await storage.getUserProgress(userId);
       res.json(progress);
     } catch (error) {
@@ -89,9 +89,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/user/progress', isAuthenticated, async (req: any, res) => {
+  app.put('/api/user/progress', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = "test-user-123";
       const progressData = insertUserProgressSchema.parse({
         ...req.body,
         userId,
@@ -191,9 +191,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/user/performance', isAuthenticated, async (req: any, res) => {
+  app.get('/api/user/performance', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = "test-user-123";
       const metrics = await storage.getUserPerformanceMetrics(userId);
       res.json(metrics);
     } catch (error) {

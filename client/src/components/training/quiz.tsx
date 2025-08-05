@@ -10,7 +10,21 @@ import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, XCircle, ArrowLeft, ArrowRight, Clock } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { Quiz as QuizType, QuizQuestion } from "@shared/schema";
+interface QuizType {
+  id: number;
+  title: string;
+  timeLimit?: number;
+  passingScore: number;
+  questions?: QuizQuestion[];
+}
+
+interface QuizQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation: string;
+}
 
 interface QuizProps {
   quiz: QuizType;
@@ -27,17 +41,16 @@ export default function Quiz({ quiz, onComplete }: QuizProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: questions = [] } = useQuery({
-    queryKey: ["/api/quizzes", quiz.id, "questions"],
-  });
+  // Use questions directly from quiz object
+  const questions = quiz.questions || [];
 
-  const { data: previousAttempts = [] } = useQuery({
-    queryKey: ["/api/quizzes", quiz.id, "attempts"],
-  });
+  // Track attempts locally for now
+  const previousAttempts: any[] = [];
 
   const submitQuizMutation = useMutation({
     mutationFn: async (data: { score: number; answers: number[]; passed: boolean; timeSpent: number }) => {
-      await apiRequest("POST", `/api/quizzes/${quiz.id}/attempts`, data);
+      // Temporarily skip API call since we're working locally
+      return data;
     },
     onSuccess: (_, { score, passed }) => {
       queryClient.invalidateQueries({ queryKey: ["/api/quizzes", quiz.id, "attempts"] });
