@@ -9,7 +9,7 @@ import Landing from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
 import TrainingDay from "@/pages/training-day";
 import ScriptLibrary from "@/pages/script-library";
-import Performance from "@/pages/performance";
+
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -23,7 +23,7 @@ function Router() {
           <Route path="/" component={Dashboard} />
           <Route path="/training/:day" component={TrainingDay} />
           <Route path="/scripts" component={ScriptLibrary} />
-          <Route path="/performance" component={Performance} />
+
         </>
       )}
       <Route component={NotFound} />

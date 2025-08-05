@@ -6,8 +6,6 @@ import { Progress } from "@/components/ui/progress";
 import { 
   Home, 
   BookOpen, 
-  Mic, 
-  TrendingUp, 
   CheckCircle, 
   Play, 
   Lock 
@@ -38,18 +36,6 @@ export default function Sidebar() {
       href: "/scripts",
       icon: BookOpen,
       current: location === "/scripts"
-    },
-    {
-      name: "Practice Calls",
-      href: "/practice",
-      icon: Mic,
-      current: location === "/practice"
-    },
-    {
-      name: "Performance",
-      href: "/performance",
-      icon: TrendingUp,
-      current: location === "/performance"
     }
   ];
 
