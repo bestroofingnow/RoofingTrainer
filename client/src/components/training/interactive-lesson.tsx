@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +39,13 @@ export default function InteractiveLesson({
   const [currentSection, setCurrentSection] = useState(0);
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
   const [isCompleted, setIsCompleted] = useState(false);
+
+  // Reset state when module changes
+  useEffect(() => {
+    setCurrentSection(0);
+    setCompletedSections(new Set());
+    setIsCompleted(false);
+  }, [moduleId]);
 
   // Ensure content and sections exist
   if (!content || !content.sections || content.sections.length === 0) {

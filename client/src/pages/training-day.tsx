@@ -191,6 +191,7 @@ export default function TrainingDay() {
         if (moduleContent) {
           return (
             <InteractiveLesson
+              key={`${day}-${currentModuleIndex}-${currentModule.id}`}
               title={currentModule.title}
               moduleId={currentModule.id}
               content={moduleContent}
