@@ -9,8 +9,8 @@ const router = Router();
 // Middleware to check if user is admin
 const isAdmin = async (req: any, res: any, next: any) => {
   try {
-    // For development, using test user
-    const user = await storage.getUser("test-user-123");
+    // For development, using James's account
+    const user = await storage.getUser("36142437");
     
     if (!user || user.role !== 'admin') {
       return res.status(403).json({ message: "Forbidden: Admin access required" });

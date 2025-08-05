@@ -15,17 +15,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Temporary auth bypass for development
   app.get('/api/auth/user', async (req: any, res) => {
     try {
-      // Create or get test user for development
-      let user = await storage.getUser("test-user-123");
+      // For development, using James's account as the authenticated user
+      const user = await storage.getUser("36142437");
       if (!user) {
-        user = await storage.upsertUser({
-          id: "test-user-123",
-          email: "test@bestroofing.com",
-          firstName: "Test",
-          lastName: "Admin",
-          profileImageUrl: null,
-          role: "admin",
-        });
+        return res.status(404).json({ message: "User not found" });
       }
       res.json(user);
     } catch (error) {

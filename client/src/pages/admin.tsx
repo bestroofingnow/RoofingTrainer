@@ -298,7 +298,14 @@ export default function AdminPage() {
                       <TableBody>
                         {(users as any[]).map((user: any) => (
                           <TableRow key={user.id}>
-                            <TableCell>{user.firstName} {user.lastName}</TableCell>
+                            <TableCell>
+                              {user.firstName} {user.lastName}
+                              {user.email === 'james@bestroofingnow.com' && (
+                                <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                                  Super Admin
+                                </span>
+                              )}
+                            </TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>
                               <span className={`px-2 py-1 rounded text-xs font-medium ${
