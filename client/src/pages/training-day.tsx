@@ -127,10 +127,17 @@ export default function TrainingDay() {
   }
 
   const dayProgress = Math.round((currentModuleIndex / dayContent.modules.length) * 100);
+  const allModulesCompleted = currentModuleIndex === dayContent.modules.length - 1;
 
   const handleNextModule = () => {
     if (currentModuleIndex < dayContent.modules.length - 1) {
       setCurrentModuleIndex(currentModuleIndex + 1);
+    } else {
+      // If we're at the last module of the day, show completion message
+      toast({
+        title: "Day Completed!",
+        description: `Congratulations! You've completed Day ${day}. Navigate to Day ${day + 1} from the sidebar.`,
+      });
     }
   };
 
@@ -347,13 +354,23 @@ export default function TrainingDay() {
                       <Save className="h-4 w-4 mr-2" />
                       Save Progress
                     </Button>
-                    <Button
-                      onClick={handleNextModule}
-                      disabled={currentModuleIndex >= dayContent.modules.length - 1}
-                    >
-                      Continue Training
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
+                    {allModulesCompleted && day < 5 ? (
+                      <Button
+                        onClick={() => window.location.href = `/training/${day + 1}`}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        Continue to Day {day + 1}
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={handleNextModule}
+                        disabled={currentModuleIndex >= dayContent.modules.length - 1}
+                      >
+                        Continue Training
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>

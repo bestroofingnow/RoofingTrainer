@@ -42,10 +42,13 @@ export default function InteractiveLesson({
 
   // Ensure content and sections exist
   if (!content || !content.sections || content.sections.length === 0) {
+    console.error(`No content available for module: ${moduleId}`);
+    console.log('Content received:', content);
     return (
       <Card>
         <CardContent className="p-6">
-          <p>No content available for this module.</p>
+          <p>No content available for module: {moduleId}</p>
+          <p className="text-sm text-gray-500 mt-2">Please check if the module content is defined in training-content.ts</p>
         </CardContent>
       </Card>
     );
@@ -55,10 +58,13 @@ export default function InteractiveLesson({
   
   // Ensure section exists
   if (!section) {
+    console.error(`Section not found at index ${currentSection} for module ${moduleId}`);
+    console.log('Available sections:', content.sections);
     return (
       <Card>
         <CardContent className="p-6">
-          <p>Error loading section content.</p>
+          <p>Error loading section content for module: {moduleId}</p>
+          <p className="text-sm text-gray-500 mt-2">Section index: {currentSection}</p>
         </CardContent>
       </Card>
     );
