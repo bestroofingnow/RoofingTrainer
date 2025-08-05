@@ -3,16 +3,19 @@ import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useAuth } from "@/hooks/useAuth";
 import { 
   Home, 
   BookOpen, 
   CheckCircle, 
   Play, 
-  Lock 
+  Lock,
+  Settings 
 } from "lucide-react";
 
 export default function Sidebar() {
   const [location] = useLocation();
+  const { user } = useAuth();
   
   const { data: progress = [] } = useQuery<any[]>({
     queryKey: ["/api/user/progress"],
@@ -106,6 +109,23 @@ export default function Sidebar() {
                 </div>
               </Link>
             ))}
+            
+            {user?.role === 'admin' && (
+              <Link href="/admin">
+                <div className={cn(
+                  "group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer",
+                  location === "/admin"
+                    ? "bg-primary/10 text-primary"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                )}>
+                  <Settings className={cn(
+                    "mr-3 h-5 w-5",
+                    location === "/admin" ? "text-primary" : "text-gray-400"
+                  )} />
+                  Admin
+                </div>
+              </Link>
+            )}
 
             {/* Training Days */}
             <div className="space-y-1 pt-4">

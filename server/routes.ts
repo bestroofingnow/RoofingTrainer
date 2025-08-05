@@ -2,11 +2,15 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import adminRoutes from "./routes/admin";
 import { insertUserProgressSchema, insertQuizAttemptSchema, insertPracticeRecordingSchema, insertPerformanceMetricsSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+
+  // Admin routes (temporarily placed after auth setup for development)
+  // app.use("/api/admin", adminRoutes);
 
   // Temporary auth bypass for development
   app.get('/api/auth/user', async (req: any, res) => {
@@ -18,8 +22,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: "test-user-123",
           email: "test@bestroofing.com",
           firstName: "Test",
-          lastName: "User",
+          lastName: "Admin",
           profileImageUrl: null,
+          role: "admin",
         });
       }
       res.json(user);
@@ -28,6 +33,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
+
+  // Admin routes - placed after test auth setup
+  app.use("/api/admin", adminRoutes);
 
   // Training modules (temporarily unprotected for development)
   app.get('/api/training/modules', async (req, res) => {

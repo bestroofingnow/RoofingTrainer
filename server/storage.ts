@@ -31,6 +31,12 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   
+  // Admin operations
+  getAllUsers(): Promise<User[]>;
+  createAdminUser(userData: Partial<User>): Promise<User>;
+  updateUser(id: string, userData: Partial<User>): Promise<User>;
+  deleteUser(id: string): Promise<void>;
+  
   // Training modules
   getTrainingModules(): Promise<TrainingModule[]>;
   getTrainingModule(id: number): Promise<TrainingModule | undefined>;
@@ -82,6 +88,38 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  // Admin operations
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users).orderBy(asc(users.createdAt));
+  }
+
+  async createAdminUser(userData: Partial<User>): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values({
+        id: userData.id || crypto.randomUUID(),
+        ...userData,
+      })
+      .returning();
+    return user;
+  }
+
+  async updateUser(id: string, userData: Partial<User>): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({
+        ...userData,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await db.delete(users).where(eq(users.id, id));
   }
 
   // Training modules

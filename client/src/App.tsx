@@ -9,6 +9,7 @@ import Landing from "@/pages/landing";
 import Dashboard from "@/pages/dashboard";
 import TrainingDay from "@/pages/training-day";
 import ScriptLibrary from "@/pages/script-library";
+import AdminPage from "@/pages/admin";
 
 
 function Router() {
@@ -23,7 +24,7 @@ function Router() {
           <Route path="/" component={Dashboard} />
           <Route path="/training/:day" component={TrainingDay} />
           <Route path="/scripts" component={ScriptLibrary} />
-
+          <Route path="/admin" component={AdminPage} />
         </>
       )}
       <Route component={NotFound} />
